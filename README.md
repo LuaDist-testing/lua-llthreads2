@@ -20,6 +20,15 @@ This is full dropin replacement for [llthreads](https://github.com/Neopallium/lu
 * thread:start() has additional parameter which control in which thread child Lua VM will be destroyed
 * allow pass cfunctions to child thread (e.g. to initialize Lua state)
 
+##Thread start arguments
+| default | `detached` | `joinable` | join returns | child state closes by | gc calls | detach on |
+|:-------:|:----------:|:----------:|:------------:|:---------------------:|:--------:|:---------:|
+|         |    false   |    false   | `true`       |         child         |  join    | `<NEVER>` |
+|    *    |    false   |    true    | Lua values   |         parent        |  join    | `<NEVER>` |
+|    *    |    true    |    false   | raise error  |         child         | `<NONE>` |   start   |
+|         |    true    |    true    | `true`       |         child         | detach   |    gc     |
+
+
 ##Usage
 
 ### Use custom logger
@@ -45,7 +54,8 @@ local thread = require "llthreads".new[[
 
 -- We tell that we start attached thread but child Lua State shuld be close in child thread. 
 -- If `thread` became garbage in main thread then finallizer calls thread:join() 
--- and main thread may hungup.
+-- and main thread may hungup. But because of child state closes in child thread all objects
+-- in this state can be destroyed and we can prevent deadlock.
 thread:start(false, false)
 
 -- We can call join.
@@ -107,6 +117,34 @@ while thread:alive() do
 end
 
 local ok, ret = thread:join() -- true, 1
+```
+
+### Use `ex` module
+``` Lua 
+local Threads = require "llthreads.ex"
+
+local ok, v = Threads.new(function()
+  return 1
+end):start():join()
+assert(v == 1)
+
+local thread = Threads.new({
+  -- this thread code gets changed arguments
+  function(a, b)
+    assert(1 == a)
+    assert(2 == b)
+    print("Done")
+  end;
+  
+  -- prelude can change thread arguments
+  prelude = function(a, b)
+    assert("1" == a)
+    assert(nil == b)
+    return tonumber(a), 2
+  end;
+}, "1")
+
+thread:start():join()
 ```
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/moteus/lua-llthreads2/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
