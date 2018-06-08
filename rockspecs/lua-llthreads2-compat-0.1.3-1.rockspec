@@ -1,8 +1,8 @@
 package = "lua-llthreads2-compat"
-version = "scm-0"
+version = "0.1.3-1"
 source = {
-  url = "https://github.com/moteus/lua-llthreads2/archive/master.zip",
-  dir = "lua-llthreads2-master",
+  url = "https://github.com/moteus/lua-llthreads2/archive/v0.1.3.zip",
+  dir = "lua-llthreads2-0.1.3",
 }
 description = {
   summary = "Low-Level threads for Lua",

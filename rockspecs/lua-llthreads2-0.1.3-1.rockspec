@@ -1,17 +1,9 @@
--- This file was automatically generated for the LuaDist project.
-
 package = "lua-llthreads2"
-version = "0.1.2-1"
--- LuaDist source
+version = "0.1.3-1"
 source = {
-  tag = "0.1.2-1",
-  url = "git://github.com/LuaDist-testing/lua-llthreads2.git"
+  url = "https://github.com/moteus/lua-llthreads2/archive/v0.1.3.zip",
+  dir = "lua-llthreads2-0.1.3",
 }
--- Original source
--- source = {
---   url = "https://github.com/moteus/lua-llthreads2/archive/v0.1.2.zip",
---   dir = "lua-llthreads2-0.1.2",
--- }
 description = {
   summary = "Low-Level threads for Lua",
   homepage = "http://github.com/moteus/lua-llthreads2",
@@ -23,7 +15,7 @@ description = {
   ]],
 }
 dependencies = {
-  "lua >= 5.1, < 5.3",
+  "lua >= 5.1, < 5.4",
 }
 build = {
   type = "builtin",
